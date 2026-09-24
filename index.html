@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protocol Somn — Instrument CBT-I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script type='text/javascript' nonce='JsSwwzcBeT1s4LXo36QK3Q==' src='https://5f08720f-e112-4d0a-8b11-f1a71607c9c4.frame.claudeusercontent.com/_Wiqcr5pKGGvsR7PJzrKEaUq5P6eskvOV0A4DINGkpkoR1OOC0nPlTuOWEeViKBCzcYfVmQz67895iq5ahfFqDWXv9l0Ae86wuJfrRQkprOhVfqzlYgK89AtOZliM6_guhZwZG37DYujfajIyalskwwcsEZdUsGiw3ogZySDX-NA-hn1tWWQsI6-eJWDwDMluypl5v2IE3gEbrX06EiGVqC6zVl6H_3_18hyBErrZwFO214LpUD14FuD0y5sccOdY-z2JrzNzNIo5N1N-w_gr5lBI6OAhgyfkniEyeB4hxUvOuWh6VYe4PONAs1_izzWUlXk6-7cNfLAlunu7t9JY54_LRIEQIhaD25U5ChHDIuQzKi-42Vkc48BY4p4Drj7kEhx5tOT19Op6IDaFMxQ8B92XSSHMmvyfY1wwB5-bbCqD3JAxK-3jrmjbrMoTS-xnB0Ik1z2SlXWf_7MQiFmmqJX-6crdlZSx0zmmQiCxq8xVOLLdHPmFMsmq_iBtubGw02tMiw4cvLFnuYMgTPc_uIkmRR32hPTP6qYGgc-gh8RdnWrGuiaqEI_zE4h9ckov81Q7wFnxM-haA5HGupcdbQV-sNeOLW-5NIqU2zPnkVOLPpHoJiKdLMc-hQWMvU_UKXT7zQ0oYf0gSAG1WNnXsd-2P672iz8rdS8p82gEz_WH_IM28GCSYd2CUA9Td1_Idt0fqGf0qC9o8g3pBwn5A'></script><script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#131A2B;
+    --ink-soft:#1E2A47;
+    --paper:#F1EEE6;
+    --card:#FFFFFF;
+    --accent:#B8863B;
+    --accent-soft:#E8D5AE;
+    --good:#4F7A63;
+    --good-soft:#DCE8DF;
+    --warn:#A8574F;
+    --warn-soft:#F0DAD6;
+    --text:#1B2029;
+    --muted:#6B6F76;
+    --line:#DEDACE;
+    --line-dark:#39456A;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{font-family:'Fraunces',Georgia,serif;}
+  a{color:var(--accent);}
+  .wrap{max-width:920px;margin:0 auto;padding:0 28px;}
+  .prose{max-width:680px;}
+
+  nav.topnav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(19,26,43,0.94);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line-dark);
+  }
+  nav.topnav .wrap{display:flex;align-items:center;justify-content:space-between;height:58px;max-width:1040px;}
+  .brand{color:#F1EEE6;font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;letter-spacing:0.01em;text-decoration:none;}
+  .brand span{color:var(--accent-soft);}
+  .navlinks{display:flex;gap:2px;}
+  .navlinks a{
+    color:#C7CCDA;text-decoration:none;font-size:0.88rem;padding:8px 12px;border-radius:3px;
+    transition:color .15s, background .15s;white-space:nowrap;
+  }
+  .navlinks a:hover{color:#fff;background:rgba(255,255,255,0.07);}
+  #navToggle{display:none;background:none;border:1px solid var(--line-dark);color:#F1EEE6;padding:6px 10px;border-radius:3px;font-size:1rem;cursor:pointer;}
+
+  .profilebar{background:var(--card);border-bottom:1px solid var(--line);}
+  .profilebar-inner{display:flex;align-items:center;gap:10px;padding:12px 28px;flex-wrap:wrap;max-width:1040px;}
+  .profilebar label{margin:0;font-size:0.82rem;color:var(--muted);font-weight:600;white-space:nowrap;}
+  .profilebar select{width:auto;min-width:160px;padding:7px 10px;}
+  .privacy-note{width:100%;font-size:0.8rem;color:var(--muted);margin:2px 0 0;padding:0 28px 10px;max-width:1040px;box-sizing:border-box;}
+
+  header.hero{
+    background:radial-gradient(ellipse 900px 500px at 15% -10%, #223055 0%, var(--ink) 55%);
+    color:#F1EEE6;
+    padding:76px 0 64px;
+    opacity:0;
+    animation:fadeIn .7s ease forwards;
+  }
+  @keyframes fadeIn{to{opacity:1;}}
+  @media (prefers-reduced-motion: reduce){ header.hero{animation:none;opacity:1;} }
+  header.hero .wrap{max-width:1040px;}
+  .eyebrow-line{width:44px;height:2px;background:var(--accent);margin-bottom:22px;}
+  header.hero h1{font-size:clamp(2.1rem,4.4vw,3.1rem);font-weight:600;line-height:1.12;margin:0 0 20px;max-width:14ch;}
+  header.hero p.lead{font-size:1.12rem;color:#C7CCDA;max-width:52ch;margin:0 0 30px;}
+  .hero-stats{display:flex;gap:36px;flex-wrap:wrap;margin-top:36px;border-top:1px solid var(--line-dark);padding-top:26px;}
+  .hero-stat b{display:block;font-family:'Fraunces',serif;font-size:1.5rem;color:var(--accent-soft);font-weight:600;}
+  .hero-stat span{font-size:0.85rem;color:#98A0B5;}
+  .btn{
+    display:inline-block;background:var(--accent);color:#1B1305;font-weight:600;
+    padding:12px 22px;border-radius:3px;text-decoration:none;border:none;cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:0.95rem;transition:background .15s, transform .1s;
+  }
+  .btn:hover{background:#CB9A4E;}
+  .btn:active{transform:translateY(1px);}
+  .btn.secondary{background:transparent;color:#F1EEE6;border:1px solid var(--line-dark);}
+  .btn.secondary:hover{background:rgba(255,255,255,0.06);}
+  .btn.small{padding:8px 14px;font-size:0.85rem;}
+  .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent-soft);}
+  .btn.danger{background:transparent;color:var(--warn);border:1px solid var(--warn);}
+  .btn.danger:hover{background:var(--warn-soft);}
+  .btn[disabled]{opacity:0.45;cursor:not-allowed;}
+
+  section{padding:64px 0;border-bottom:1px solid var(--line);}
+  section.alt{background:var(--card);}
+  .kicker{color:var(--accent);font-size:0.85rem;font-weight:600;margin:0 0 10px;}
+  h2.title{font-size:1.9rem;font-weight:600;margin:0 0 14px;}
+  p.dek{color:var(--muted);font-size:1.02rem;max-width:60ch;margin:0 0 34px;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:24px 26px;}
+  .card + .card{margin-top:14px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr;}}
+
+  label{display:block;font-size:0.85rem;color:var(--muted);margin:0 0 6px;font-weight:500;}
+  input[type=text],input[type=date],input[type=time],input[type=number],select,textarea{
+    width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:3px;
+    font-family:'Inter',sans-serif;font-size:0.95rem;background:#FCFBF8;color:var(--text);
+  }
+  textarea{resize:vertical;min-height:56px;}
+  input:focus,select:focus,textarea:focus,button:focus,a:focus{outline:2px solid var(--accent);outline-offset:2px;}
+  .field{margin-bottom:16px;}
+  .field-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media(max-width:860px){.field-row{grid-template-columns:repeat(2,1fr);}}
+  .form-actions{display:flex;gap:10px;align-items:center;padding-top:4px;}
+  .editing-flag{display:none;background:var(--accent-soft);color:#5A4118;padding:8px 14px;border-radius:3px;font-size:0.85rem;margin-bottom:16px;}
+  .editing-flag.show{display:block;}
+
+  .isi-q{border-top:1px solid var(--line);padding:20px 0;}
+  .isi-q:first-child{border-top:none;}
+  .isi-q p{font-weight:500;margin:0 0 12px;}
+  .scale{display:flex;gap:8px;flex-wrap:wrap;}
+  .scale label{
+    display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:20px;
+    padding:6px 13px;cursor:pointer;font-size:0.86rem;color:var(--text);font-weight:400;margin:0;
+    background:#FCFBF8;
+  }
+  .scale input{width:auto;margin:0;}
+  .scale label:has(input:checked){background:var(--accent-soft);border-color:var(--accent);}
+  .isi-result{margin-top:26px;padding:20px;border-radius:4px;background:var(--paper);border:1px solid var(--line);}
+  .isi-result .score{font-family:'Fraunces',serif;font-size:2.4rem;font-weight:600;}
+  .badge{display:inline-block;padding:3px 11px;border-radius:20px;font-size:0.8rem;font-weight:600;}
+  .badge.b0{background:var(--good-soft);color:var(--good);}
+  .badge.b1{background:#E9E4D2;color:#8A7A3E;}
+  .badge.b2{background:#F3E4CC;color:#A6712B;}
+  .badge.b3{background:var(--warn-soft);color:var(--warn);}
+
+  table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+  th{text-align:left;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  td.note-cell{white-space:normal;max-width:160px;color:var(--muted);font-style:italic;}
+  tr:last-child td{border-bottom:none;}
+  .table-scroll{overflow-x:auto;}
+  .se-tag{padding:2px 9px;border-radius:20px;font-size:0.78rem;font-weight:600;}
+  .se-good{background:var(--good-soft);color:var(--good);}
+  .se-mid{background:#EFE6CE;color:#8A6C22;}
+  .se-low{background:var(--warn-soft);color:var(--warn);}
+  .icon-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.9rem;padding:2px 7px;}
+  .icon-btn:hover{color:var(--accent);}
+  .icon-btn.danger:hover{color:var(--warn);}
+
+  .empty{color:var(--muted);font-size:0.92rem;font-style:italic;padding:18px 0;}
+
+  .calc-out{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;}
+  @media(max-width:720px){.calc-out{grid-template-columns:1fr;}}
+  .calc-box{border:1px solid var(--line);border-radius:4px;padding:16px 18px;background:var(--paper);}
+  .calc-box b{display:block;font-family:'Fraunces',serif;font-size:1.5rem;font-weight:600;color:var(--ink);}
+  .calc-box span{font-size:0.82rem;color:var(--muted);}
+  .se-table td,.se-table th{font-size:0.86rem;}
+  .row-highlight{background:var(--accent-soft) !important;}
+
+  .acc-item{border:1px solid var(--line);border-radius:4px;margin-bottom:10px;background:var(--card);overflow:hidden;}
+  .acc-head{
+    width:100%;text-align:left;background:none;border:none;padding:16px 20px;
+    display:flex;justify-content:space-between;align-items:center;cursor:pointer;
+    font-family:'Fraunces',serif;font-size:1.08rem;font-weight:600;color:var(--text);
+  }
+  .acc-head .plus{color:var(--accent);font-size:1.3rem;font-family:'Inter',sans-serif;transition:transform .2s;}
+  .acc-item.open .plus{transform:rotate(45deg);}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+  .acc-body-inner{padding:0 20px 20px;color:var(--text);}
+  .acc-body-inner ol,.acc-body-inner ul{padding-left:22px;margin:8px 0;}
+  .acc-body-inner li{margin-bottom:8px;}
+  .note{background:var(--paper);border-left:3px solid var(--accent);padding:12px 16px;font-size:0.9rem;color:var(--muted);margin-top:12px;border-radius:0 3px 3px 0;}
+
+  .chart-wrap{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:20px;}
+  canvas{max-width:100%;}
+
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+  @media(max-width:720px){.compare-grid{grid-template-columns:1fr;}}
+  .compare-box{border:1px solid var(--line);border-radius:4px;padding:18px 20px;background:var(--paper);}
+  .compare-box p.label{font-size:0.82rem;color:var(--muted);margin:0 0 8px;font-weight:600;}
+  .compare-nums{display:flex;align-items:baseline;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;color:var(--ink);}
+  .compare-nums .arrow{color:var(--muted);font-family:'Inter',sans-serif;font-size:1.1rem;}
+  .compare-delta{font-size:0.85rem;font-weight:600;margin-top:6px;font-family:'Inter',sans-serif;}
+  .compare-delta.better{color:var(--good);}
+  .compare-delta.worse{color:var(--warn);}
+  .compare-delta.flat{color:var(--muted);}
+
+  .disclaimer{background:var(--warn-soft);border:1px solid #D9B9B5;border-radius:4px;padding:16px 18px;font-size:0.87rem;color:#6B3733;margin-bottom:32px;}
+  .disclaimer b{color:#5A2C29;}
+
+  .data-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid var(--line);}
+
+  footer{background:var(--ink);color:#98A0B5;padding:36px 0;font-size:0.87rem;}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;max-width:1040px;}
+  footer a{color:var(--accent-soft);text-decoration:none;}
+  footer a:hover{text-decoration:underline;}
+
+  ::selection{background:var(--accent-soft);}
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <a href="#acasa" class="brand">Protocol <span>Somn</span></a>
+    <button id="navToggle" aria-label="Meniu">☰</button>
+    <div class="navlinks" id="navLinks">
+      <a href="#isi">ISI</a>
+      <a href="#jurnal">Jurnal</a>
+      <a href="#calculator">Calculator</a>
+      <a href="#tehnici">Tehnici</a>
+      <a href="#progres">Progres</a>
+    </div>
+  </div>
+</nav>
+
+<div class="profilebar">
+  <div class="wrap profilebar-inner">
+    <label for="profileSelect">Profil pacient</label>
+    <select id="profileSelect"></select>
+    <button class="btn ghost small" id="btnNewProfile" type="button">+ Profil nou</button>
+    <button class="btn ghost small" id="btnRenameProfile" type="button">Redenumește</button>
+    <button class="btn danger small" id="btnDeleteProfile" type="button">Șterge profilul</button>
+  </div>
+  <p class="privacy-note">Datele fiecărui profil rămân salvate local, doar în acest browser și pe acest dispozitiv — nu sunt trimise către niciun server. Schimbarea browserului sau ștergerea datelor de navigare le pierde definitiv, așa că folosește <b>Export</b> (în secțiunea Jurnal) pentru o copie de siguranță.</p>
+</div>
+
+<header class="hero" id="acasa">
+  <div class="wrap">
+    <div class="eyebrow-line"></div>
+    <h1>Un instrument de lucru pentru insomnie, construit pe CBT-I.</h1>
+    <p class="lead">Evaluare ISI, jurnal de somn, calculator de restricție a somnului și tehnicile de bază ale terapiei — într-un singur loc, cu datele păstrate local, în acest browser.</p>
+    <a href="#isi" class="btn">Începe evaluarea</a>
+    <a href="#tehnici" class="btn secondary">Vezi tehnicile</a>
+    <div class="hero-stats">
+      <div class="hero-stat"><b id="statEntries">0</b><span>nopți înregistrate</span></div>
+      <div class="hero-stat"><b id="statSE">—</b><span>eficiență de somn, medie 7 zile</span></div>
+      <div class="hero-stat"><b id="statISI">—</b><span>ultimul scor ISI</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="isi">
+  <div class="wrap">
+    <p class="kicker">Evaluare</p>
+    <h2 class="title">Indicele de Severitate a Insomniei (ISI)</h2>
+    <p class="dek">7 întrebări, răspuns de la 0 la 4. Completează-l acum și repetă-l săptămânal — evoluția se vede în secțiunea Progres.</p>
+    <div class="card" id="isiForm"></div>
+    <div class="isi-result" id="isiResult" style="display:none;"></div>
+  </div>
+</section>
+
+<section class="alt" id="jurnal">
+  <div class="wrap">
+    <p class="kicker">Zilnic</p>
+    <h2 class="title">Jurnal de somn</h2>
+    <p class="dek">Completează în fiecare dimineață, cât mai curând după trezire. Pe baza acestor date se calculează timpul în pat (TIB), timpul total de somn (TST) și eficiența somnului (SE).</p>
+
+    <div class="card">
+      <div class="editing-flag" id="editingFlag">Editezi o noapte deja salvată — la salvare, intrarea existentă va fi actualizată.</div>
+      <form id="diaryForm">
+        <div class="field-row">
+          <div class="field"><label for="d_date">Data</label><input type="date" id="d_date" required=""></div>
+          <div class="field"><label for="d_bed">Ora culcării</label><input type="time" id="d_bed" required=""></div>
+          <div class="field"><label for="d_latency">Latență adormire (min)</label><input type="number" id="d_latency" min="0" max="600" required=""></div>
+          <div class="field"><label for="d_awake">Timp treaz peste noapte (min)</label><input type="number" id="d_awake" min="0" max="600" required=""></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="d_finalwake">Ora trezirii finale</label><input type="time" id="d_finalwake" required=""></div>
+          <div class="field"><label for="d_up">Ora ridicării din pat</label><input type="time" id="d_up" required=""></div>
+          <div class="field"><label for="d_quality">Calitate somn (1–5)</label>
+            <select id="d_quality">
+              <option value="1">1 — foarte proastă</option>
+              <option value="2">2 — proastă</option>
+              <option value="3" selected="">3 — medie</option>
+              <option value="4">4 — bună</option>
+              <option value="5">5 — foarte bună</option>
+            </select>
+          </div>
+          <div class="field"><label for="d_nap">Somn de zi (min)</label><input type="number" id="d_nap" min="0" max="300" value="0"></div>
+        </div>
+        <div class="field">
+          <label for="d_note">Notă (opțional — ex: călătorie, boală, eveniment care ar putea explica o noapte atipică)</label>
+          <textarea id="d_note" maxlength="200" rows="2"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn" id="diarySubmitBtn">Salvează noaptea</button>
+          <button type="button" class="btn ghost" id="diaryCancelEdit" style="display:none;">Anulează editarea</button>
+        </div>
+      </form>
+
+      <div class="data-tools">
+        <button class="btn ghost small" id="btnExportJson" type="button">Exportă toate datele (JSON)</button>
+        <button class="btn ghost small" id="btnExportCsv" type="button">Exportă jurnalul (CSV)</button>
+        <button class="btn ghost small" id="btnImportJson" type="button">Importă date (JSON)</button>
+        <input type="file" id="importFileInput" accept="application/json" class="visually-hidden">
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:22px;">
+      <div class="table-scroll">
+        <table id="diaryTable">
+          <thead>
+            <tr><th>Data</th><th>Culcare→Ridicare</th><th>TIB</th><th>TST</th><th>SE</th><th>Calitate</th><th>Somn zi</th><th>Notă</th><th></th></tr>
+          </thead>
+          <tbody id="diaryBody"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="diaryEmpty">Niciun jurnal salvat încă — completează formularul de mai sus pentru prima noapte.</div>
+    </div>
+  </div>
+</section>
+
+<section id="calculator">
+  <div class="wrap">
+    <p class="kicker">Restricție de somn</p>
+    <h2 class="title">Calculator TIB / Sleep Efficiency</h2>
+    <p class="dek">Se recalculează automat pe baza mediei ultimelor nopți din jurnal, conform algoritmului Spielman. Ai nevoie de minimum 3 nopți înregistrate (ideal 7–14).</p>
+
+    <div class="card">
+      <div class="field-row" style="grid-template-columns:1fr 1fr;">
+        <div class="field"><label for="c_wake">Ora de trezire fixă dorită</label><input type="time" id="c_wake" value="07:00"></div>
+        <div class="field"><label for="c_window">Fereastră de calcul</label>
+          <select id="c_window">
+            <option value="7">Ultimele 7 nopți</option>
+            <option value="14">Ultimele 14 nopți</option>
+            <option value="30">Ultimele 30 nopți</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" id="calcBtn" type="button">Recalculează acum</button>
+
+      <div id="calcResult" style="display:none;">
+        <div class="calc-out">
+          <div class="calc-box"><b id="c_avgTST">—</b><span>TST mediu (h)</span></div>
+          <div class="calc-box"><b id="c_avgSE">—</b><span>SE medie</span></div>
+          <div class="calc-box"><b id="c_tib">—</b><span>TIB recomandat</span></div>
+        </div>
+        <div class="calc-box" style="margin-top:14px;">
+          <span>Orar recomandat</span>
+          <b id="c_schedule" style="font-size:1.15rem;">—</b>
+        </div>
+        <div class="note" id="c_decision"></div>
+      </div>
+      <div class="empty" id="calcEmpty">Adaugă cel puțin 3 nopți în jurnal pentru a calcula o recomandare.</div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <p style="font-weight:600;margin:0 0 12px;">Regula de ajustare săptămânală</p>
+      <div class="table-scroll">
+        <table class="se-table">
+          <thead><tr><th>Sleep Efficiency</th><th>Decizie</th><th>Observație</th></tr></thead>
+          <tbody id="seRuleTable">
+            <tr data-rule="high"><td>SE ≥ 90%</td><td>Crește TIB cu 15–20 min</td><td>Somnul s-a consolidat</td></tr>
+            <tr data-rule="mid"><td>SE 85–89%</td><td>Menține TIB neschimbat</td><td>Se așteaptă încă o săptămână de date</td></tr>
+            <tr data-rule="low"><td>SE &lt; 85%</td><td>Scade TIB cu 15–20 min</td><td>Niciodată sub 5–5,5 ore</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="tehnici">
+  <div class="wrap">
+    <p class="kicker">Referință</p>
+    <h2 class="title">Tehnicile protocolului</h2>
+    <p class="dek">Cele patru componente active ale CBT-I, plus adjuvantele. Deschide fiecare secțiune pentru detalii.</p>
+    <div id="accordion"></div>
+  </div>
+</section>
+
+<section id="progres">
+  <div class="wrap">
+    <p class="kicker">Evoluție</p>
+    <h2 class="title">Progres în timp</h2>
+    <p class="dek">Scorul ISI ar trebui să scadă, iar eficiența somnului să crească și să se stabilizeze peste 85–90%, pe măsură ce protocolul avansează.</p>
+    <div class="grid2">
+      <div class="chart-wrap">
+        <p style="font-weight:600;margin:0 0 14px;">Scor ISI</p>
+        <canvas id="isiChart" height="220"></canvas>
+        <div class="empty" id="isiChartEmpty">Completează chestionarul ISI pentru a vedea evoluția.</div>
+      </div>
+      <div class="chart-wrap">
+        <p style="font-weight:600;margin:0 0 14px;">Sleep Efficiency pe noapte</p>
+        <canvas id="seChart" height="220"></canvas>
+        <div class="empty" id="seChartEmpty">Completează jurnalul de somn pentru a vedea evoluția.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <p style="font-weight:600;margin:0 0 4px;">Comparație — început vs acum</p>
+      <p style="font-size:0.85rem;color:var(--muted);margin:0;">Primele intrări comparate cu cele mai recente, pentru a vedea evoluția reală a protocolului.</p>
+      <div class="compare-grid">
+        <div class="compare-box">
+          <p class="label">Scor ISI — primul vs ultimul</p>
+          <div class="compare-nums" id="cmpIsiNums">— <span class="arrow">→</span> —</div>
+          <div class="compare-delta" id="cmpIsiDelta"></div>
+        </div>
+        <div class="compare-box">
+          <p class="label">Sleep Efficiency medie — prima jumătate vs ultima</p>
+          <div class="compare-nums" id="cmpSeNums">— <span class="arrow">→</span> —</div>
+          <div class="compare-delta" id="cmpSeDelta"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Protocol Somn — instrument educațional bazat pe CBT-I. Nu înlocuiește o evaluare clinică individuală.</span>
+    <span>Creat de <a href="https://www.psyalexsimion.com" target="_blank" rel="noopener">Alex Simion</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+
+// ---------- generic storage helpers ----------
+function load(key){ try{ const v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? [] : v; }catch(e){ return []; } }
+function save(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); return true; }catch(e){ return false; } }
+
+// ---------- profiles ----------
+const LS_PROFILES = 'cbti_profiles';
+const LS_ACTIVE = 'cbti_active_profile';
+
+function getProfiles(){ return load(LS_PROFILES); }
+function saveProfiles(list){ save(LS_PROFILES, list); }
+
+function makeProfileId(){ return 'p_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+function ensureActiveProfile(){
+  let profiles = getProfiles();
+  if(profiles.length === 0){
+    const p = { id: makeProfileId(), name: 'Pacient 1' };
+    profiles = [p];
+    saveProfiles(profiles);
+    localStorage.setItem(LS_ACTIVE, p.id);
+    return p.id;
+  }
+  let active = localStorage.getItem(LS_ACTIVE);
+  if(!active || !profiles.find(p=>p.id===active)){
+    active = profiles[0].id;
+    localStorage.setItem(LS_ACTIVE, active);
+  }
+  return active;
+}
+
+function getActiveProfileId(){ return ensureActiveProfile(); }
+function setActiveProfileId(id){ localStorage.setItem(LS_ACTIVE, id); }
+
+function DIARY_KEY(){ return 'cbti_diary::' + getActiveProfileId(); }
+function ISI_KEY(){ return 'cbti_isi::' + getActiveProfileId(); }
+
+function renderProfileSelect(){
+  const sel = document.getElementById('profileSelect');
+  const active = getActiveProfileId();
+  const profiles = getProfiles();
+  sel.innerHTML = '';
+  profiles.forEach(p=>{
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name;
+    if(p.id === active) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  document.getElementById('btnDeleteProfile').disabled = profiles.length <= 1;
+}
+
+function refreshAllForProfileChange(){
+  cancelDiaryEdit();
+  renderDiary();
+  renderStats();
+  renderISIChart();
+  renderSEChart();
+  renderComparison();
+  document.getElementById('isiResult').style.display = 'none';
+  document.getElementById('calcResult').style.display = 'none';
+  document.getElementById('calcEmpty').style.display = 'block';
+  document.querySelectorAll('#isiForm input[type=radio]').forEach(r=> r.checked = false);
+}
+
+document.getElementById('profileSelect').addEventListener('change', function(){
+  setActiveProfileId(this.value);
+  refreshAllForProfileChange();
+});
+
+document.getElementById('btnNewProfile').addEventListener('click', function(){
+  const name = prompt('Numele noului profil (ex: numele pacientului):');
+  if(!name || !name.trim()) return;
+  const profiles = getProfiles();
+  const p = { id: makeProfileId(), name: name.trim() };
+  profiles.push(p);
+  saveProfiles(profiles);
+  setActiveProfileId(p.id);
+  renderProfileSelect();
+  refreshAllForProfileChange();
+});
+
+document.getElementById('btnRenameProfile').addEventListener('click', function(){
+  const profiles = getProfiles();
+  const active = getActiveProfileId();
+  const current = profiles.find(p=>p.id===active);
+  if(!current) return;
+  const name = prompt('Nume nou pentru acest profil:', current.name);
+  if(!name || !name.trim()) return;
+  current.name = name.trim();
+  saveProfiles(profiles);
+  renderProfileSelect();
+});
+
+document.getElementById('btnDeleteProfile').addEventListener('click', function(){
+  const profiles = getProfiles();
+  if(profiles.length <= 1) return;
+  const active = getActiveProfileId();
+  const current = profiles.find(p=>p.id===active);
+  if(!confirm('Ștergi profilul "'+(current?current.name:'')+'" și tot jurnalul + istoricul ISI asociate? Această acțiune nu poate fi anulată.')) return;
+  localStorage.removeItem('cbti_diary::'+active);
+  localStorage.removeItem('cbti_isi::'+active);
+  const remaining = profiles.filter(p=>p.id!==active);
+  saveProfiles(remaining);
+  setActiveProfileId(remaining[0].id);
+  renderProfileSelect();
+  refreshAllForProfileChange();
+});
+
+// ---------- mobile nav ----------
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+function applyNavMode(){
+  if(window.innerWidth < 720){
+    navToggle.style.display='inline-block';
+    navLinks.style.display='none';
+    navLinks.style.flexDirection='column';
+    navLinks.style.position='absolute';
+    navLinks.style.top='58px';
+    navLinks.style.left='0';
+    navLinks.style.right='0';
+    navLinks.style.background='#131A2B';
+    navLinks.style.padding='8px 20px 16px';
+  } else {
+    navToggle.style.display='none';
+    navLinks.style.display='flex';
+    navLinks.style.position='static';
+    navLinks.style.flexDirection='row';
+    navLinks.style.padding='0';
+  }
+}
+navToggle.addEventListener('click', ()=>{
+  navLinks.style.display = navLinks.style.display === 'none' ? 'flex' : 'none';
+});
+window.addEventListener('resize', applyNavMode);
+applyNavMode();
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+  if(window.innerWidth < 720) navLinks.style.display='none';
+}));
+
+// ---------- ISI ----------
+const ISI_QUESTIONS = [
+  "Dificultate de a adormi",
+  "Dificultate de a rămâne adormit(ă)",
+  "Probleme legate de trezirea prea devreme dimineața",
+  "Cât de mulțumit(ă) / nemulțumit(ă) ești de somnul tău actual",
+  "Cât de vizibil crezi că este, pentru ceilalți, impactul problemei tale de somn asupra calității vieții",
+  "Cât de îngrijorat(ă) / deranjat(ă) ești de problema ta actuală de somn",
+  "În ce măsură crezi că problema de somn interferează cu funcționarea ta zilnică (oboseală, dispoziție, concentrare etc.)"
+];
+const ISI_SCALE_LABELS = ["0 — deloc","1 — ușor","2 — moderat","3 — sever","4 — foarte sever"];
+
+const isiForm = document.getElementById('isiForm');
+let isiHTML = '';
+ISI_QUESTIONS.forEach((q, i)=>{
+  isiHTML += '<div class="isi-q"><p>'+(i+1)+'. '+q+'</p><div class="scale">';
+  ISI_SCALE_LABELS.forEach((lab, v)=>{
+    isiHTML += '<label><input type="radio" name="isi_q'+i+'" value="'+v+'">'+lab+'</label>';
+  });
+  isiHTML += '</div></div>';
+});
+isiHTML += '<div style="padding-top:20px;"><button class="btn" id="isiSubmit" type="button">Calculează scorul</button></div>';
+isiForm.innerHTML = isiHTML;
+
+function interpretISI(total){
+  if(total<=7) return {label:'Fără insomnie clinică', cls:'b0'};
+  if(total<=14) return {label:'Insomnie subclinică', cls:'b1'};
+  if(total<=21) return {label:'Insomnie moderată', cls:'b2'};
+  return {label:'Insomnie severă', cls:'b3'};
+}
+
+document.getElementById('isiSubmit').addEventListener('click', function(){
+  let total = 0, answered = 0;
+  for(let i=0;i<7;i++){
+    const sel = isiForm.querySelector('input[name="isi_q'+i+'"]:checked');
+    if(sel){ total += parseInt(sel.value,10); answered++; }
+  }
+  if(answered < 7){
+    alert('Te rog răspunde la toate cele 7 întrebări.');
+    return;
+  }
+  const interp = interpretISI(total);
+  const resultBox = document.getElementById('isiResult');
+  resultBox.style.display = 'block';
+  resultBox.innerHTML =
+    '<span class="score">'+total+'<span style="font-size:1rem;color:var(--muted);font-family:\'Inter\',sans-serif;"> / 28</span></span>'+
+    '<div style="margin-top:8px;"><span class="badge '+interp.cls+'">'+interp.label+'</span></div>';
+
+  const todayStr = new Date().toISOString().slice(0,10);
+  const history = load(ISI_KEY());
+  const existingIdx = history.findIndex(h=>h.date===todayStr);
+  if(existingIdx >= 0){
+    if(confirm('Ai completat deja chestionarul ISI azi. Vrei să suprascrii scorul anterior din această zi?')){
+      history[existingIdx] = {date: todayStr, total};
+      save(ISI_KEY(), history);
+    }
+  } else {
+    history.push({date: todayStr, total});
+    save(ISI_KEY(), history);
+  }
+  renderStats();
+  renderISIChart();
+  renderComparison();
+});
+
+// ---------- Diary ----------
+function toMinutes(t){ const parts = t.split(':').map(Number); return parts[0]*60+parts[1]; }
+function fmtHours(mins){ return (mins/60).toFixed(1)+'h'; }
+
+function computeNight(entry){
+  let bed = toMinutes(entry.bed);
+  let up = toMinutes(entry.up);
+  if(up <= bed) up += 24*60;
+  let tib = up - bed;
+  let tst = tib - entry.latency - entry.awake;
+  if(tst < 0) tst = 0;
+  let se = tib > 0 ? (tst / tib * 100) : 0;
+  return {tib, tst, se};
+}
+
+let editingIndex = null;
+
+const diaryForm = document.getElementById('diaryForm');
+document.getElementById('d_date').valueAsDate = new Date();
+
+function cancelDiaryEdit(){
+  editingIndex = null;
+  document.getElementById('editingFlag').classList.remove('show');
+  document.getElementById('diarySubmitBtn').textContent = 'Salvează noaptea';
+  document.getElementById('diaryCancelEdit').style.display = 'none';
+  diaryForm.reset();
+  document.getElementById('d_date').valueAsDate = new Date();
+  document.getElementById('d_quality').value = 3;
+}
+document.getElementById('diaryCancelEdit').addEventListener('click', cancelDiaryEdit);
+
+diaryForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  const entry = {
+    date: document.getElementById('d_date').value,
+    bed: document.getElementById('d_bed').value,
+    latency: parseInt(document.getElementById('d_latency').value,10) || 0,
+    awake: parseInt(document.getElementById('d_awake').value,10) || 0,
+    finalwake: document.getElementById('d_finalwake').value,
+    up: document.getElementById('d_up').value,
+    quality: parseInt(document.getElementById('d_quality').value,10),
+    nap: parseInt(document.getElementById('d_nap').value,10) || 0,
+    note: (document.getElementById('d_note').value || '').trim(),
+  };
+  if(!entry.date || !entry.bed || !entry.finalwake || !entry.up){
+    alert('Completează toate câmpurile obligatorii.');
+    return;
+  }
+  const diary = load(DIARY_KEY());
+  if(editingIndex !== null && editingIndex >= 0 && editingIndex < diary.length){
+    diary[editingIndex] = entry;
+  } else {
+    diary.push(entry);
+  }
+  diary.sort((a,b)=> a.date.localeCompare(b.date));
+  save(DIARY_KEY(), diary);
+  cancelDiaryEdit();
+  renderDiary();
+  renderStats();
+  renderSEChart();
+  renderComparison();
+  runCalculator();
+});
+
+function seTag(se){
+  if(se>=90) return '<span class="se-tag se-good">'+se.toFixed(0)+'%</span>';
+  if(se>=85) return '<span class="se-tag se-mid">'+se.toFixed(0)+'%</span>';
+  return '<span class="se-tag se-low">'+se.toFixed(0)+'%</span>';
+}
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function renderDiary(){
+  const diary = load(DIARY_KEY());
+  const body = document.getElementById('diaryBody');
+  const emptyMsg = document.getElementById('diaryEmpty');
+  body.innerHTML = '';
+  if(diary.length === 0){
+    emptyMsg.style.display = 'block';
+    return;
+  }
+  emptyMsg.style.display = 'none';
+  [...diary].reverse().forEach((entry)=>{
+    const {tib, tst, se} = computeNight(entry);
+    const realIndex = diary.indexOf(entry);
+    const noteDisplay = entry.note ? escapeHtml(entry.note.length > 28 ? entry.note.slice(0,28)+'…' : entry.note) : '—';
+    const noteTitle = entry.note ? ' title="'+escapeHtml(entry.note)+'"' : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td>'+entry.date+'</td>'+
+      '<td>'+entry.bed+' → '+entry.up+'</td>'+
+      '<td>'+fmtHours(tib)+'</td>'+
+      '<td>'+fmtHours(tst)+'</td>'+
+      '<td>'+seTag(se)+'</td>'+
+      '<td>'+entry.quality+'/5</td>'+
+      '<td>'+(entry.nap ? entry.nap+' min' : '—')+'</td>'+
+      '<td class="note-cell"'+noteTitle+'>'+noteDisplay+'</td>'+
+      '<td><button class="icon-btn" data-idx="'+realIndex+'" data-action="edit" title="Editează">✎</button>'+
+      '<button class="icon-btn danger" data-idx="'+realIndex+'" data-action="delete" title="Șterge">✕</button></td>';
+    body.appendChild(tr);
+  });
+  body.querySelectorAll('.icon-btn').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      const idx = parseInt(this.getAttribute('data-idx'),10);
+      const action = this.getAttribute('data-action');
+      if(action === 'delete'){
+        if(!confirm('Ștergi definitiv această noapte din jurnal?')) return;
+        const d = load(DIARY_KEY());
+        d.splice(idx,1);
+        save(DIARY_KEY(), d);
+        if(editingIndex === idx) cancelDiaryEdit();
+        renderDiary();
+        renderStats();
+        renderSEChart();
+        renderComparison();
+        runCalculator();
+      } else if(action === 'edit'){
+        const d = load(DIARY_KEY());
+        const entry = d[idx];
+        if(!entry) return;
+        editingIndex = idx;
+        document.getElementById('d_date').value = entry.date;
+        document.getElementById('d_bed').value = entry.bed;
+        document.getElementById('d_latency').value = entry.latency;
+        document.getElementById('d_awake').value = entry.awake;
+        document.getElementById('d_finalwake').value = entry.finalwake;
+        document.getElementById('d_up').value = entry.up;
+        document.getElementById('d_quality').value = entry.quality;
+        document.getElementById('d_nap').value = entry.nap || 0;
+        document.getElementById('d_note').value = entry.note || '';
+        document.getElementById('editingFlag').classList.add('show');
+        document.getElementById('diarySubmitBtn').textContent = 'Actualizează noaptea';
+        document.getElementById('diaryCancelEdit').style.display = 'inline-block';
+        document.getElementById('jurnal').scrollIntoView({behavior:'smooth'});
+      }
+    });
+  });
+}
+
+// ---------- Export / Import ----------
+async function downloadBlob(filename, content, mime){
+  if(!window.claude || typeof window.claude.use !== 'function'){
+    alert('Exportul de fișiere nu este disponibil în această fereastră.');
+    return;
+  }
+  const downloads = await window.claude.use('downloads');
+  if(!downloads){
+    alert('Exportul de fișiere nu este disponibil în această fereastră.');
+    return;
+  }
+  try{
+    const blob = new Blob([content], {type: mime});
+    await downloads.save({filename, data: blob});
+  }catch(err){
+    if(!err || err.code !== 'declined'){
+      alert('Nu s-a putut salva fișierul.');
+    }
+  }
+}
+
+document.getElementById('btnExportJson').addEventListener('click', async function(){
+  const profiles = getProfiles();
+  const active = getActiveProfileId();
+  const profile = profiles.find(p=>p.id===active);
+  const payload = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    profileName: profile ? profile.name : '',
+    diary: load(DIARY_KEY()),
+    isiHistory: load(ISI_KEY())
+  };
+  const fname = 'protocol-somn_' + (profile?profile.name.replace(/[^a-z0-9]+/gi,'-'):'export') + '_' + new Date().toISOString().slice(0,10) + '.json';
+  await downloadBlob(fname, JSON.stringify(payload, null, 2), 'application/json');
+});
+
+function csvEscape(v){
+  const s = String(v==null?'':v);
+  if(/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+  return s;
+}
+
+document.getElementById('btnExportCsv').addEventListener('click', async function(){
+  const diary = load(DIARY_KEY());
+  const header = ['Data','Culcare','TrezireFinala','RidicareDinPat','LatentaMin','TreazMin','Calitate1_5','SomnZiMin','Nota','TIB_h','TST_h','SE_%'];
+  const rows = [header.join(',')];
+  diary.forEach(e=>{
+    const {tib, tst, se} = computeNight(e);
+    rows.push([
+      e.date, e.bed, e.finalwake, e.up, e.latency, e.awake, e.quality, e.nap||0, csvEscape(e.note||''),
+      (tib/60).toFixed(2), (tst/60).toFixed(2), se.toFixed(1)
+    ].join(','));
+  });
+  await downloadBlob('jurnal-somn_'+new Date().toISOString().slice(0,10)+'.csv', rows.join('\n'), 'text/csv');
+});
+
+document.getElementById('btnImportJson').addEventListener('click', function(){
+  document.getElementById('importFileInput').click();
+});
+document.getElementById('importFileInput').addEventListener('change', function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(){
+    let parsed;
+    try{ parsed = JSON.parse(reader.result); }
+    catch(err){ alert('Fișierul nu este un JSON valid.'); return; }
+    if(!parsed || (!Array.isArray(parsed.diary) && !Array.isArray(parsed.isiHistory))){
+      alert('Fișierul nu are formatul așteptat (export din Protocol Somn).');
+      return;
+    }
+    if(!confirm('Importul va înlocui jurnalul și istoricul ISI ale profilului curent cu datele din fișier. Continui?')) return;
+    if(Array.isArray(parsed.diary)) save(DIARY_KEY(), parsed.diary);
+    if(Array.isArray(parsed.isiHistory)) save(ISI_KEY(), parsed.isiHistory);
+    renderDiary(); renderStats(); renderISIChart(); renderSEChart(); renderComparison();
+    document.getElementById('calcResult').style.display='none';
+    document.getElementById('calcEmpty').style.display='block';
+    runCalculator();
+    alert('Import finalizat.');
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+// ---------- Calculator ----------
+function runCalculator(){
+  const diary = load(DIARY_KEY());
+  const windowSize = parseInt(document.getElementById('c_window').value,10);
+  const recent = diary.slice(-windowSize);
+  const resultBox = document.getElementById('calcResult');
+  const emptyBox = document.getElementById('calcEmpty');
+  if(recent.length < 3){
+    resultBox.style.display = 'none';
+    emptyBox.style.display = 'block';
+    return;
+  }
+  emptyBox.style.display = 'none';
+  resultBox.style.display = 'block';
+
+  let sumTST = 0, sumSE = 0;
+  recent.forEach(e=>{
+    const {tst, se} = computeNight(e);
+    sumTST += tst; sumSE += se;
+  });
+  const avgTSTmin = sumTST / recent.length;
+  const avgSE = sumSE / recent.length;
+
+  let tibMin = avgTSTmin + 20;
+  const MIN_TIB = 5.5 * 60;
+  if(tibMin < MIN_TIB) tibMin = MIN_TIB;
+
+  document.getElementById('c_avgTST').textContent = (avgTSTmin/60).toFixed(1)+'h';
+  document.getElementById('c_avgSE').textContent = avgSE.toFixed(0)+'%';
+  document.getElementById('c_tib').textContent = (tibMin/60).toFixed(1)+'h';
+
+  const wakeStr = document.getElementById('c_wake').value || '07:00';
+  const wakeMin = toMinutes(wakeStr);
+  let bedMin = wakeMin - tibMin;
+  if(bedMin < 0) bedMin += 24*60;
+  const bedH = String(Math.floor(bedMin/60)%24).padStart(2,'0');
+  const bedM = String(Math.round(bedMin%60)).padStart(2,'0');
+  document.getElementById('c_schedule').textContent = 'Culcare '+bedH+':'+bedM+' → Trezire '+wakeStr;
+
+  document.querySelectorAll('#seRuleTable tr').forEach(tr=>tr.classList.remove('row-highlight'));
+  let decisionText = '';
+  if(avgSE >= 90){
+    document.querySelector('[data-rule="high"]').classList.add('row-highlight');
+    decisionText = 'SE medie '+avgSE.toFixed(0)+'% — somnul s-a consolidat. Săptămâna viitoare, crește TIB cu 15–20 min.';
+  } else if(avgSE >= 85){
+    document.querySelector('[data-rule="mid"]').classList.add('row-highlight');
+    decisionText = 'SE medie '+avgSE.toFixed(0)+'% — menține TIB neschimbat încă o săptămână.';
+  } else {
+    document.querySelector('[data-rule="low"]').classList.add('row-highlight');
+    decisionText = 'SE medie '+avgSE.toFixed(0)+'% — scade TIB cu 15–20 min (fără a coborî sub 5–5,5 ore).';
+  }
+  document.getElementById('c_decision').textContent = decisionText;
+}
+document.getElementById('calcBtn').addEventListener('click', runCalculator);
+document.getElementById('c_wake').addEventListener('change', runCalculator);
+document.getElementById('c_window').addEventListener('change', runCalculator);
+
+// ---------- Accordion ----------
+const ACCORDION_DATA = [
+  {
+    title: "Modelul 3P și hiperactivarea",
+    body: '<p>Insomnia se menține prin trei tipuri de factori: <b>predispozanți</b> (vulnerabilitate individuală), <b>precipitanți</b> (evenimentul declanșator) și <b>perpetuanți</b> — comportamentele compensatorii (somn prelungit, culcare devreme, îngrijorare legată de somn) care, paradoxal, mențin problema mult după ce factorul declanșator a dispărut. CBT-I țintește în special perpetuanții.</p><div class="note">Insomnia nu e doar „lipsă de somn" — e o stare de activare fiziologică și cognitivă crescută (modelul hiperactivării, Perlis), pe care corpul o menține chiar în pat.</div>'
+  },
+  {
+    title: "Control stimul — cele 6 reguli",
+    body: '<ol><li>Patul și dormitorul se folosesc doar pentru somn și activitate sexuală.</li><li>Te culci doar la apariția somnolenței reale, nu a oboselii generale.</li><li>Dacă nu adormi în ~15–20 minute, te ridici din pat, faci o activitate liniștită în altă cameră și revii doar la somnolență.</li><li>Repeți regula anterioară de câte ori e nevoie, toată noaptea.</li><li>Ora de trezire e fixă, 7 zile din 7, indiferent de câte ore ai dormit.</li><li>Fără somn de zi; dacă e absolut necesar, sub 20 de minute și înainte de ora 15:00.</li></ol>'
+  },
+  {
+    title: "Restricție de somn / compresie",
+    body: '<p>Timpul petrecut în pat se aliniază la timpul real de somn, pentru a crește presiunea homeostatică și a consolida somnul — vezi secțiunea Calculator pentru aplicarea directă pe datele tale.</p><div class="note">La vârstnici sau persoane fragile se preferă <b>compresia graduală</b> — reducere treptată pe 3–4 săptămâni — în locul reducerii bruște.</div>'
+  },
+  {
+    title: "Terapie cognitivă",
+    body: '<ul><li><b>Restructurare cognitivă:</b> identificare → evaluare a dovezilor → gând alternativ, mai realist.</li><li><b>Intenție paradoxală:</b> pentru anxietatea legată de procesul adormirii.</li><li><b>„Constructive worry":</b> timp dedicat îngrijorării, programat cu 2–3 ore înainte de culcare.</li><li><b>Decatastrofizare:</b> separarea oboselii de insomnie de alte cauze posibile ale ei.</li><li><b>Reducerea comportamentelor de siguranță:</b> verificarea ceasului, calculul orelor rămase până la trezire.</li></ul>'
+  },
+  {
+    title: "Relaxare și igiena somnului (adjuvante)",
+    body: '<ul><li>Relaxare musculară progresivă, respirație diafragmatică, mindfulness / body scan.</li><li>Cafeină — evitare cu minimum 6 ore înainte de culcare.</li><li>Alcool — fragmentează somnul în a doua parte a nopții, chiar dacă pare că ajută la adormire.</li><li>Temperatură cameră 18–20°C, reducerea luminii albastre seara.</li></ul><div class="note">Igiena de somn, izolată, are eficacitate redusă — funcționează doar ca supliment la celelalte componente, nu ca tratament principal.</div>'
+  },
+];
+
+const accWrap = document.getElementById('accordion');
+ACCORDION_DATA.forEach((item, i)=>{
+  const div = document.createElement('div');
+  div.className = 'acc-item' + (i===0 ? ' open' : '');
+  div.innerHTML =
+    '<button class="acc-head" aria-expanded="'+(i===0)+'"><span>'+item.title+'</span><span class="plus">+</span></button>'+
+    '<div class="acc-body"><div class="acc-body-inner">'+item.body+'</div></div>';
+  accWrap.appendChild(div);
+  const head = div.querySelector('.acc-head');
+  const body = div.querySelector('.acc-body');
+  function setState(open){
+    div.classList.toggle('open', open);
+    head.setAttribute('aria-expanded', open);
+    body.style.maxHeight = open ? body.scrollHeight + 'px' : '0px';
+  }
+  head.addEventListener('click', ()=> setState(!div.classList.contains('open')));
+  if(i===0){ requestAnimationFrame(()=> setState(true)); }
+});
+window.addEventListener('load', ()=>{
+  document.querySelectorAll('.acc-item.open .acc-body').forEach(b=>{ b.style.maxHeight = b.scrollHeight+'px'; });
+});
+
+// ---------- Stats (hero) ----------
+function renderStats(){
+  const diary = load(DIARY_KEY());
+  const isi = load(ISI_KEY());
+  document.getElementById('statEntries').textContent = diary.length;
+  if(diary.length){
+    const recent = diary.slice(-7);
+    let sumSE = 0;
+    recent.forEach(e=>{ sumSE += computeNight(e).se; });
+    document.getElementById('statSE').textContent = (sumSE/recent.length).toFixed(0)+'%';
+  } else {
+    document.getElementById('statSE').textContent = '—';
+  }
+  if(isi.length){
+    document.getElementById('statISI').textContent = isi[isi.length-1].total + '/28';
+  } else {
+    document.getElementById('statISI').textContent = '—';
+  }
+}
+
+// ---------- Comparison ----------
+function renderComparison(){
+  const isi = load(ISI_KEY());
+  const diary = load(DIARY_KEY());
+
+  const isiNumsEl = document.getElementById('cmpIsiNums');
+  const isiDeltaEl = document.getElementById('cmpIsiDelta');
+  if(isi.length >= 2){
+    const first = isi[0].total, last = isi[isi.length-1].total;
+    isiNumsEl.innerHTML = first+' <span class="arrow">→</span> '+last;
+    const diff = last - first;
+    isiDeltaEl.textContent = (diff<=0 ? diff : '+'+diff) + ' puncte' + (diff<0?' (ameliorare)': diff>0 ? ' (agravare)' : ' (neschimbat)');
+    isiDeltaEl.className = 'compare-delta ' + (diff<0?'better':diff>0?'worse':'flat');
+  } else {
+    isiNumsEl.innerHTML = '— <span class="arrow">→</span> —';
+    isiDeltaEl.textContent = 'Necesită cel puțin 2 completări ISI.';
+    isiDeltaEl.className = 'compare-delta flat';
+  }
+
+  const seNumsEl = document.getElementById('cmpSeNums');
+  const seDeltaEl = document.getElementById('cmpSeDelta');
+  if(diary.length >= 2){
+    const half = Math.max(1, Math.floor(diary.length/2));
+    const firstGroup = diary.slice(0, half);
+    const lastGroup = diary.slice(diary.length-half);
+    const avg = (arr)=> arr.reduce((s,e)=> s+computeNight(e).se, 0) / arr.length;
+    const firstAvg = avg(firstGroup), lastAvg = avg(lastGroup);
+    seNumsEl.innerHTML = firstAvg.toFixed(0)+'% <span class="arrow">→</span> '+lastAvg.toFixed(0)+'%';
+    const diff = lastAvg - firstAvg;
+    seDeltaEl.textContent = (diff>=0?'+':'') + diff.toFixed(0) + ' puncte procentuale' + (diff>0?' (ameliorare)': diff<0 ? ' (agravare)' : ' (neschimbat)');
+    seDeltaEl.className = 'compare-delta ' + (diff>0?'better':diff<0?'worse':'flat');
+  } else {
+    seNumsEl.innerHTML = '— <span class="arrow">→</span> —';
+    seDeltaEl.textContent = 'Necesită cel puțin 2 nopți în jurnal.';
+    seDeltaEl.className = 'compare-delta flat';
+  }
+}
+
+// ---------- Charts ----------
+let isiChartInstance = null, seChartInstance = null;
+const CHART_FONT = "'Inter', sans-serif";
+
+function renderISIChart(){
+  const isi = load(ISI_KEY());
+  const canvas = document.getElementById('isiChart');
+  const emptyMsg = document.getElementById('isiChartEmpty');
+  if(isi.length === 0){ canvas.style.display='none'; emptyMsg.style.display='block'; emptyMsg.textContent='Completează chestionarul ISI pentru a vedea evoluția.'; return; }
+  if(typeof Chart === 'undefined'){ canvas.style.display='none'; emptyMsg.style.display='block'; emptyMsg.textContent='Graficul nu s-a putut încărca (verifică conexiunea la internet).'; return; }
+  canvas.style.display='block'; emptyMsg.style.display='none';
+  const labels = isi.map(e=>e.date);
+  const data = isi.map(e=>e.total);
+  if(isiChartInstance) isiChartInstance.destroy();
+  isiChartInstance = new Chart(canvas.getContext('2d'), {
+    type:'line',
+    data:{ labels, datasets:[{
+      label:'Scor ISI', data, borderColor:'#B8863B', backgroundColor:'rgba(184,134,59,0.12)',
+      fill:true, tension:0.25, pointRadius:4, pointBackgroundColor:'#B8863B'
+    }]},
+    options:{
+      responsive:true,
+      plugins:{ legend:{display:false}, tooltip:{titleFont:{family:CHART_FONT}, bodyFont:{family:CHART_FONT}} },
+      scales:{
+        y:{ min:0, max:28, ticks:{font:{family:CHART_FONT}}, grid:{color:'#DEDACE'} },
+        x:{ ticks:{font:{family:CHART_FONT}}, grid:{display:false} }
+      }
+    }
+  });
+}
+
+function renderSEChart(){
+  const diary = load(DIARY_KEY());
+  const canvas = document.getElementById('seChart');
+  const emptyMsg = document.getElementById('seChartEmpty');
+  if(diary.length === 0){ canvas.style.display='none'; emptyMsg.style.display='block'; emptyMsg.textContent='Completează jurnalul de somn pentru a vedea evoluția.'; return; }
+  if(typeof Chart === 'undefined'){ canvas.style.display='none'; emptyMsg.style.display='block'; emptyMsg.textContent='Graficul nu s-a putut încărca (verifică conexiunea la internet).'; return; }
+  canvas.style.display='block'; emptyMsg.style.display='none';
+  const recent = diary.slice(-30);
+  const labels = recent.map(e=>e.date);
+  const data = recent.map(e=> parseFloat(computeNight(e).se.toFixed(1)));
+  const line90 = labels.map(()=>90);
+  const line85 = labels.map(()=>85);
+  if(seChartInstance) seChartInstance.destroy();
+  seChartInstance = new Chart(canvas.getContext('2d'), {
+    data:{ labels, datasets:[
+      {
+        type:'bar', label:'Sleep Efficiency %', data,
+        backgroundColor: data.map(v=> v>=90 ? '#4F7A63' : v>=85 ? '#C9A227' : '#A8574F'),
+        order: 2
+      },
+      {
+        type:'line', label:'Prag țintă 90%', data: line90, borderColor:'#4F7A63',
+        borderDash:[5,4], pointRadius:0, borderWidth:1.5, fill:false, order:1
+      },
+      {
+        type:'line', label:'Prag minim 85%', data: line85, borderColor:'#A8574F',
+        borderDash:[5,4], pointRadius:0, borderWidth:1.5, fill:false, order:1
+      }
+    ]},
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{ display:true, labels:{ font:{family:CHART_FONT, size:11}, boxWidth:14 } },
+        tooltip:{titleFont:{family:CHART_FONT}, bodyFont:{family:CHART_FONT}}
+      },
+      scales:{
+        y:{ min:0, max:100, ticks:{font:{family:CHART_FONT}}, grid:{color:'#DEDACE'} },
+        x:{ ticks:{font:{family:CHART_FONT}}, grid:{display:false} }
+      }
+    }
+  });
+}
+
+// ---------- init ----------
+renderProfileSelect();
+renderDiary();
+renderStats();
+renderISIChart();
+renderSEChart();
+renderComparison();
+runCalculator();
+
+})();
+</script>
+</body>
+</html>
